@@ -13,7 +13,7 @@
     </template>
     <BasicForm @register="registerForm">
       <template #mobileHide="{ model, field }">
-        <div class="ml-4 flex items-center space-x-2">
+        <div class="flex items-center ml-4 space-x-2">
           <Switch v-model:checked="model[field]" size="small" />
           <span>{{ t('tb.dashboard.form.mobileHide') }}</span>
         </div>
@@ -25,7 +25,7 @@
   </BasicModal>
 </template>
 <script lang="ts" setup name="ViewsTbDashboardForm">
-  import { ref, unref, computed } from 'vue';
+  import { ref, unref, computed, onMounted } from 'vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { router } from '/@/router';
@@ -132,4 +132,17 @@
       setModalProps({ confirmLoading: false });
     }
   }
+  const props = defineProps({
+    dashboardId: {
+      type: String,
+      required: false,
+    },
+  });
+  onMounted(async () => {
+    if (props.dashboardId) {
+      const res = await getDashboardById(props.dashboardId);
+      record.value = res || ({} as Dashboard);
+      setFieldsValue(record.value);
+    }
+  });
 </script>

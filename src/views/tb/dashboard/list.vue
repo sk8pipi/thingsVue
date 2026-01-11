@@ -2,7 +2,7 @@
   <div class="dashboard-list">
     <BasicTable @register="registerTable">
       <template #headerTop>
-        <div class="text-lg font-bold my-2">
+        <div class="my-2 text-lg font-bold">
           {{ t(getTitle.value) }}
         </div>
       </template>
@@ -74,6 +74,7 @@
   import { Icon } from '/@/components/Icon';
   import { Checkbox, Tag } from 'ant-design-vue';
   import { useUserStore } from '/@/store/modules/user';
+
   import {
     currentTenantDashboardList,
     assignDashboardToPublicCustomer,
@@ -293,6 +294,6 @@
   }
 
   function handleOpenDashboard(record: Recordable) {
-    // router.push({ path: `/dashboard/${record.id.id}` });
+    router.push({ path: `/dashboard/${record.id.id}` });
   }
 </script>

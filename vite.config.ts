@@ -1,4 +1,5 @@
 import type { UserConfig, ConfigEnv } from 'vite';
+import cesium from 'vite-plugin-cesium';
 import { defineConfig, loadEnv } from 'vite';
 import { resolve } from 'node:path';
 import {
@@ -20,7 +21,7 @@ export default defineConfig(async ({ command, mode }: ConfigEnv) => {
     root,
     base: viteEnv.VITE_PUBLIC_PATH,
     define: await createDefineOptions(),
-    plugins: createVitePlugins(isBuild, viteEnv),
+    plugins: [createVitePlugins(isBuild, viteEnv), cesium()],
     server: createServerOptions(viteEnv),
     esbuild: createEsBuildOptions(mode),
     build: createBuildOptions(viteEnv),

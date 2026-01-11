@@ -1,4 +1,3 @@
-
 import 'virtual:uno.css';
 import 'ant-design-vue/dist/reset.css';
 import '/@/design/index.less';
@@ -14,9 +13,12 @@ import { setupRouter, router } from '/@/router';
 import { setupRouterGuard } from '/@/router/guard';
 import { setupStore } from '/@/store';
 import { isDevMode } from '/@/utils/env';
+// import element-plus  ';
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css';
 
 async function bootstrap() {
-  const app = createApp(App);
+  const app = createApp(App).use(ElementPlus);
 
   // Configure store
   setupStore(app);

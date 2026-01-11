@@ -34,7 +34,8 @@
     "types": [
       "node",
       "vue-types",
-      "vite/client"
+      "vite/client",
+      "element-plus/global"
     ],
     "paths": {
       "/@/*": ["src/*"],
