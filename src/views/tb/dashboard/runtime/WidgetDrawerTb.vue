@@ -1,7 +1,7 @@
 <template>
   <el-drawer
     :model-value="modelValue"
-    @update:model-value="(v:boolean) => emit('update:modelValue', v)"
+    @update:model-value="(v: boolean) => emit('update:modelValue', v)"
     title="部件库"
     direction="rtl"
     :size="drawerSize"
@@ -265,7 +265,6 @@
       widgetsLoading.value = false;
     }
   }
-
 
   function emitAdd(w: TbWidgetType) {
     emit('add', w);

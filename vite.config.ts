@@ -22,7 +22,16 @@ export default defineConfig(async ({ command, mode }: ConfigEnv) => {
     base: viteEnv.VITE_PUBLIC_PATH,
     define: await createDefineOptions(),
     plugins: [createVitePlugins(isBuild, viteEnv), cesium()],
-    server: createServerOptions(viteEnv),
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8080',
+          changeOrigin: true,
+          // 如果后端是 https 且自签证书才需要 secure:false
+          // secure: false,
+        },
+      },
+    },
     esbuild: createEsBuildOptions(mode),
     build: createBuildOptions(viteEnv),
     css: createCSSOptions(),

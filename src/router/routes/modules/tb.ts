@@ -133,7 +133,7 @@ const tb: AppRouteModule = {
             icon: 'i-ant-design:layout-filled',
             tabIcon: 'i-ant-design:layout-filled',
             title: t('routes.tb.dashboard'),
-            authority: [Authority.TENANT_ADMIN, Authority.CUSTOMER_USER, Authority.SYS_ADMIN],
+            authority: [Authority.TENANT_ADMIN, Authority.CUSTOMER_USER], //, Authority.SYS_ADMIN   不让系统管理员访问仪表盘
           },
         },
       ],
