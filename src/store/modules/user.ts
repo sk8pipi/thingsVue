@@ -64,7 +64,7 @@ export const useUserStore = defineStore('app-user', {
       return this.token || getAuthCache<string>(TOKEN_KEY);
     },
     getRefreshToken(): string {
-      return this.token || getAuthCache<string>(REFRESH_TOKEN_KEY);
+      return this.refreshToken || getAuthCache<string>(REFRESH_TOKEN_KEY);
     },
     getAuthority(): Authority | string {
       return this.authority ?? getAuthCache<Authority | string>(AUTHORITY_KEY);
@@ -176,23 +176,46 @@ export const useUserStore = defineStore('app-user', {
       }
       if (goHome) {
         const currentRoute = router.currentRoute.value;
-        let path = currentRoute.query.redirect;
-        if (path !== '/') {
-          path = path || res.additionalInfo?.homePath || PageEnum.BASE_HOME;
-        } else {
-          path = res.additionalInfo?.homePath || PageEnum.BASE_HOME;
+        const redirect = currentRoute.query.redirect;
+        if (redirect) {
+          await router.replace(decodeURIComponent(redirect as string));
+          return res || null;
         }
-        await router.replace(decodeURIComponent(path as string));
+
+        const a = res.authority; // 你项目里是 Authority 枚举/字符串
+        const scope = a === 'SYS_ADMIN' ? 'sys' : a === 'TENANT_ADMIN' ? 'tenant' : 'user';
+
+        await router.replace(`/map-home?scope=${scope}`);
       }
       return res || null;
     },
     async getUserInfoAction() {
-      // if (!this.getToken) return null;
-      const res = await userInfoApi();
-      this.setUserInfo(res);
-      this.initPageCache(res);
-      this.setSessionTimeout(false);
-      return res;
+      // ✅ 1) 没 token：直接不请求，避免 /api/auth/user 401
+      const token = this.getToken;
+      if (!token) {
+        return null;
+      }
+
+      try {
+        // ✅ 2) 有 token 才请求
+        const res = await userInfoApi();
+        this.setUserInfo(res);
+        this.initPageCache(res);
+        this.setSessionTimeout(false);
+        return res;
+      } catch (e: any) {
+        // ✅ 3) token 过期/无效时：把状态清掉并回登录
+        const status = e?.response?.status;
+        if (status === 401) {
+          // 不要抛出错误去炸页面
+          this.setToken(undefined);
+          this.setSessionTimeout(true);
+          this.setUserInfo(null);
+          this.setAuthority(undefined);
+          return null;
+        }
+        throw e;
+      }
     },
     initPageCache(userInfo: UserInfo) {
       this.setPageCache('authority', userInfo.authority);

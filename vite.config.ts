@@ -24,11 +24,17 @@ export default defineConfig(async ({ command, mode }: ConfigEnv) => {
     plugins: [createVitePlugins(isBuild, viteEnv), cesium()],
     server: {
       proxy: {
+        // HTTP API
         '/api': {
           target: 'http://localhost:8080',
           changeOrigin: true,
-          // 如果后端是 https 且自签证书才需要 secure:false
-          // secure: false,
+        },
+
+        // ✅ WebSocket：同源转发到 TB 后端
+        '/api/ws': {
+          target: 'ws://localhost:8080',
+          ws: true,
+          changeOrigin: true,
         },
       },
     },

@@ -34,7 +34,14 @@ const loadingDirective: Directive = {
   },
 };
 
+// ✅ 防重复注册
+let __loadingInstalled = false;
+
 export function setupLoadingDirective(app: App) {
+  // ✅ ：如果已经注册过，直接跳过
+  if (__loadingInstalled) return;
+  __loadingInstalled = true;
+
   app.directive('loading', loadingDirective);
 }
 

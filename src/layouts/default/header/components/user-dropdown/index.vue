@@ -19,7 +19,7 @@
     <span :class="[prefixCls, `${prefixCls}--${props.theme}`]" class="flex">
       <img :class="`${prefixCls}__header`" :src="getUserInfo.avatarUrl" />
       <span :class="`${prefixCls}__info  hidden md:block`">
-        <span :class="`${prefixCls}__name`" class="truncate flex flex-col">
+        <span :class="`${prefixCls}__name`" class="flex flex-col truncate">
           <span :class="`${prefixCls}__name__title`">
             {{ getUserInfo.firstName || '未命名' }}
             <span :class="`${prefixCls}__name__tag`">
@@ -105,17 +105,14 @@
       const postCodeRef = ref<string>('');
 
       const getUserInfo = computed(() => {
-        const {
-          firstName,
-          authority,
-          email,
-          additionalInfo: { avatarUrl },
-        } = userStore.getUserInfo || {};
+        const u: any = userStore.getUserInfo || {};
+        const ai: any = u.additionalInfo || {};
+
         return {
-          firstName,
-          avatarUrl,
-          email,
-          authority,
+          firstName: u.firstName,
+          email: u.email,
+          authority: u.authority,
+          avatarUrl: ai.avatarUrl || '/resource/img/avatar.jpg',
         };
       });
 

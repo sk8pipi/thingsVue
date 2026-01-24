@@ -71,18 +71,27 @@ export const useWebsocketStore = defineStore({
       }
     },
     initWebsocket(): WebSocket | undefined {
-      const { websocketPath } = useGlobSetting();
-      const useWebSocketReturn = useWebSocket<any>(`${websocketPath}`, {
+      // ✅ 同源 WS：页面 https -> wss，页面 http -> ws
+      const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+      const host = window.location.host;
+
+      // ✅ 关键：只连同源 /api/ws，让 Vite proxy 去转发
+      const url = `${wsProtocol}://${host}/api/ws`;
+
+      const useWebSocketReturn = useWebSocket<any>(url, {
         autoReconnect: false,
         autoClose: false,
         onMessage: this.onMessage,
         onConnected: (ws) => {
+          // ThingsBoard 的鉴权消息：保持你原来的方式
           ws.send(JSON.stringify({ authCmd: { cmdId: 0, token: getToken() } }));
         },
       });
+
       this.websocket = useWebSocketReturn;
       return this.websocket?.ws;
     },
+
     onMessage(ws: WebSocket, { data }: MessageEvent): any {
       const dataObj = JSON.parse(data);
       if (Object.prototype.hasOwnProperty.call(dataObj, 'subscriptionId')) {
