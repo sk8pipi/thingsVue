@@ -137,14 +137,29 @@
       // 关键：先等 tileset 真正准备好（建议加上）
       await tileset.readyPromise;
 
-      // 临时定位：把模型放到指定经纬度（先验证能看见）
+      const lon = 127.0;
+      const lat = 37.5;
+      // 采样地形高度
+      const carto = Cesium.Cartographic.fromDegrees(lon, lat);
+      const [sampled] = await Cesium.sampleTerrainMostDetailed(viewer.terrainProvider, [carto]);
+      const ground = sampled.height ?? 0;
+
+      // 给一个抬高偏移，先用 20m 验证，再调小
+      const heightOffset = 20;
+      const finalHeight = ground + heightOffset;
+
+      // 设置位置与姿态
       tileset.modelMatrix = Cesium.Transforms.headingPitchRollToFixedFrame(
-        Cesium.Cartesian3.fromDegrees(127.0, 37.5, 10),
+        Cesium.Cartesian3.fromDegrees(lon, lat, finalHeight),
         new Cesium.HeadingPitchRoll(0, 0, 0),
       );
-
-      // 再飞过去
-      await viewer.flyTo(tileset);
+      await viewer.flyTo(tileset, {
+        offset: new Cesium.HeadingPitchRange(
+          0,
+          Cesium.Math.toRadians(-35),
+          Math.max(100, tileset.boundingSphere.radius * 2.0),
+        ),
+      });
     } catch (err) {
       console.error('Failed to load tileset from ion:', err);
     }

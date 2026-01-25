@@ -81,7 +81,7 @@
             <Row :gutter="[16, 16]">
               <Col span="8">
                 <Card size="small">
-                  <div class="text-lg mt-4 mb-2"> CPU </div>
+                  <div class="mt-4 mb-2 text-lg"> CPU </div>
                   <div class="p-2">
                     <CountTo :endVal="cpuUsage" suffix="%" class="text-xl font-bold" />
                     <span class="font-bold text-slate-400"> | {{ cpuCount }} cores</span>
@@ -90,7 +90,7 @@
               </Col>
               <Col span="8">
                 <Card size="small">
-                  <div class="text-lg mt-4 mb-2"> 内存 </div>
+                  <div class="mt-4 mb-2 text-lg"> 内存 </div>
                   <div class="p-2">
                     <CountTo :endVal="memoryUsage" suffix="%" class="text-xl font-bold" />
                     <span class="font-bold text-slate-400"> | {{ convertBytesToSize(totalMemory) }} </span>
@@ -99,7 +99,7 @@
               </Col>
               <Col span="8">
                 <Card size="small">
-                  <div class="text-lg mt-4 mb-2"> 硬盘 </div>
+                  <div class="mt-4 mb-2 text-lg"> 硬盘 </div>
                   <div class="p-2">
                     <CountTo :endVal="discUsage" suffix="%" class="text-xl font-bold" />
                     <span class="font-bold text-slate-400"> | {{ convertBytesToSize(totalDiscSpace) }}</span>
@@ -131,6 +131,7 @@
   import { EntityType } from '/@/enums/entityTypeEnum';
   import { WsCmdType } from '/@/enums/wsCmdTypeEnum';
   import { isArray } from 'lodash-es';
+
   const go = useGo();
   const { getAndIncrementCmdId, send, unsubscribe } = useWebsocketStore();
 

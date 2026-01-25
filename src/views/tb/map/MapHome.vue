@@ -2,7 +2,8 @@
   <div class="map-home">
     <!-- ✅ 全屏 Cesium -->
     <CesiumMap class="map-canvas" />
-
+    <!-- ✅ 叠加：地图部件渲染层（覆盖在 Cesium 上） -->
+    <MapWidgetLayer class="map-widgets" :storageKey="storageKey" />
     <!-- ✅ 左上角设置按钮：跳回原本系统主页（/desktop 或 homePath） -->
     <button class="map-settings-btn" type="button" @click="openHome">设置</button>
   </div>
@@ -14,6 +15,10 @@
   import { useUserStore } from '/@/store/modules/user';
   import { PageEnum } from '/@/enums/pageEnum';
   import CesiumMap from './CesiumMap.vue';
+  import { getMapWidgetStorageKey } from './mapWidgetStorage';
+  import MapWidgetLayer from './MapWidgetLayer.vue';
+
+  const storageKey = computed(() => getMapWidgetStorageKey());
 
   const router = useRouter();
   const userStore = useUserStore();
@@ -58,5 +63,11 @@
   :deep(.tb-home-drawer .el-drawer__body) {
     padding: 0;
     height: 100%;
+  }
+  .map-widgets {
+    position: absolute;
+    inset: 0;
+    z-index: 10; /* 比 Cesium 高，比按钮低也行 */
+    pointer-events: none;
   }
 </style>

@@ -111,7 +111,7 @@ const tb: AppRouteModule = {
         tabIcon: 'i-ant-design:layout-outlined',
         title: t('routes.tb.dashboard'),
         single: true,
-        authority: [Authority.TENANT_ADMIN, Authority.CUSTOMER_USER],
+        authority: [Authority.TENANT_ADMIN, Authority.CUSTOMER_USER], //, Authority.SYS_ADMIN   不让系统管理员访问仪表盘
       },
       children: [
         {
@@ -122,7 +122,7 @@ const tb: AppRouteModule = {
             icon: 'i-ant-design:layout-outlined',
             tabIcon: 'i-ant-design:layout-outlined',
             title: t('routes.tb.dashboard'),
-            authority: [Authority.TENANT_ADMIN, Authority.CUSTOMER_USER],
+            authority: [Authority.TENANT_ADMIN, Authority.CUSTOMER_USER], //, Authority.SYS_ADMIN   不让系统管理员访问仪表盘
           },
         },
         {
